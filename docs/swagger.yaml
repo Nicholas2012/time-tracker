@@ -1,0 +1,129 @@
+definitions:
+  api.CreateUserRequest:
+    properties:
+      passportNumber:
+        type: string
+    type: object
+  api.Response:
+    properties:
+      data: {}
+      error:
+        type: string
+    type: object
+  api.StartTaskResponse:
+    properties:
+      task_id:
+        type: integer
+    type: object
+  models.Task:
+    properties:
+      id:
+        type: integer
+      minutes:
+        type: integer
+      since:
+        type: string
+      until:
+        type: string
+      userID:
+        type: integer
+    type: object
+info:
+  contact: {}
+paths:
+  /users:
+    post:
+      description: Create a new user with the given passport number
+      parameters:
+      - description: Body
+        in: body
+        name: passportNumber
+        required: true
+        schema:
+          $ref: '#/definitions/api.CreateUserRequest'
+      responses:
+        "201":
+          description: User created
+        "400":
+          description: Bad request
+        "500":
+          description: Internal server error
+      summary: Create a new user
+      tags:
+      - users
+  /users/{id}/tasks:
+    post:
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: number
+      responses:
+        "200":
+          description: Task started
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/api.StartTaskResponse'
+              type: object
+        "400":
+          description: Bad request
+        "500":
+          description: Internal server error
+      summary: Create a new task and start it
+      tags:
+      - tasks
+  /users/{id}/tasks/:
+    get:
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: number
+      responses:
+        "200":
+          description: Task started
+          schema:
+            allOf:
+            - $ref: '#/definitions/api.Response'
+            - properties:
+                data:
+                  items:
+                    $ref: '#/definitions/models.Task'
+                  type: array
+              type: object
+        "400":
+          description: Bad request
+        "500":
+          description: Internal server error
+      summary: List all tasks for a user
+      tags:
+      - tasks
+  /users/{id}/tasks/{taskID}/end:
+    post:
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: number
+      - description: Task ID
+        in: path
+        name: taskID
+        required: true
+        type: number
+      responses:
+        "200":
+          description: Task started
+        "400":
+          description: Bad request
+        "500":
+          description: Internal server error
+      summary: End a task
+      tags:
+      - tasks
+swagger: "2.0"

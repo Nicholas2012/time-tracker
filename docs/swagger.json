@@ -1,0 +1,210 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "contact": {}
+    },
+    "paths": {
+        "/users": {
+            "post": {
+                "description": "Create a new user with the given passport number",
+                "tags": [
+                    "users"
+                ],
+                "summary": "Create a new user",
+                "parameters": [
+                    {
+                        "description": "Body",
+                        "name": "passportNumber",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/api.CreateUserRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "User created"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/users/{id}/tasks": {
+            "post": {
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "Create a new task and start it",
+                "parameters": [
+                    {
+                        "type": "number",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Task started",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/api.StartTaskResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/users/{id}/tasks/": {
+            "get": {
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "List all tasks for a user",
+                "parameters": [
+                    {
+                        "type": "number",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Task started",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/api.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/definitions/models.Task"
+                                            }
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        },
+        "/users/{id}/tasks/{taskID}/end": {
+            "post": {
+                "tags": [
+                    "tasks"
+                ],
+                "summary": "End a task",
+                "parameters": [
+                    {
+                        "type": "number",
+                        "description": "User ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "type": "number",
+                        "description": "Task ID",
+                        "name": "taskID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Task started"
+                    },
+                    "400": {
+                        "description": "Bad request"
+                    },
+                    "500": {
+                        "description": "Internal server error"
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "api.CreateUserRequest": {
+            "type": "object",
+            "properties": {
+                "passportNumber": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.Response": {
+            "type": "object",
+            "properties": {
+                "data": {},
+                "error": {
+                    "type": "string"
+                }
+            }
+        },
+        "api.StartTaskResponse": {
+            "type": "object",
+            "properties": {
+                "task_id": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.Task": {
+            "type": "object",
+            "properties": {
+                "id": {
+                    "type": "integer"
+                },
+                "minutes": {
+                    "type": "integer"
+                },
+                "since": {
+                    "type": "string"
+                },
+                "until": {
+                    "type": "string"
+                },
+                "userID": {
+                    "type": "integer"
+                }
+            }
+        }
+    }
+}
